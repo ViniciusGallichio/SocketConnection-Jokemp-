@@ -12,6 +12,24 @@ public class ClienteUm {
         System.out.println("Digite a porta do servidor: ");
         int portaServidor = scanner.nextInt();
 
+        System.out.println("    _____          __                                               \n" +
+                "   |     \\        |  \\                                              \n" +
+                "    \\▓▓▓▓▓ ______ | ▓▓   __  ______  ______ ____   ______   ______  \n" +
+                "      | ▓▓/      \\| ▓▓  /  \\/      \\|      \\    \\ /      \\ /      \\ \n" +
+                " __   | ▓▓  ▓▓▓▓▓▓\\ ▓▓_/  ▓▓  ▓▓▓▓▓▓\\ ▓▓▓▓▓▓\\▓▓▓▓\\  ▓▓▓▓▓▓\\  ▓▓▓▓▓▓\\\n" +
+                "|  \\  | ▓▓ ▓▓  | ▓▓ ▓▓   ▓▓| ▓▓    ▓▓ ▓▓ | ▓▓ | ▓▓ ▓▓  | ▓▓ ▓▓  | ▓▓\n" +
+                "| ▓▓__| ▓▓ ▓▓__/ ▓▓ ▓▓▓▓▓▓\\| ▓▓▓▓▓▓▓▓ ▓▓ | ▓▓ | ▓▓ ▓▓__/ ▓▓ ▓▓__/ ▓▓\n" +
+                " \\▓▓    ▓▓\\▓▓    ▓▓ ▓▓  \\▓▓\\\\▓▓     \\ ▓▓ | ▓▓ | ▓▓ ▓▓    ▓▓\\▓▓    ▓▓\n" +
+                "  \\▓▓▓▓▓▓  \\▓▓▓▓▓▓ \\▓▓   \\▓▓ \\▓▓▓▓▓▓▓\\▓▓  \\▓▓  \\▓▓ ▓▓▓▓▓▓▓  \\▓▓▓▓▓▓ \n" +
+                "                                                 | ▓▓               \n" +
+                "                                                 | ▓▓               \n" +
+                "                                                  \\▓▓               \n");
+
+        System.out.println("No Jokempô, cada jogador escolhe entre Pedra (0), Papel (1) ou Tesoura (2). " +
+                "Pedra vence Tesoura, Tesoura vence Papel e Papel vence Pedra. " +
+                "\nOs jogadores digitam o número correspondente à sua escolha e o vencedor é determinado " +
+                "com base nessas regras");
+
         try (
                 Socket soquete = new Socket(enderecoServidor, portaServidor);
                 BufferedReader entrada = new BufferedReader(new InputStreamReader(soquete.getInputStream()));
@@ -19,24 +37,6 @@ public class ClienteUm {
                 Scanner entradaUsuario = new Scanner(System.in);
         ) {
             while (true) {
-                System.out.println("    _____          __                                               \n" +
-                        "   |     \\        |  \\                                              \n" +
-                        "    \\▓▓▓▓▓ ______ | ▓▓   __  ______  ______ ____   ______   ______  \n" +
-                        "      | ▓▓/      \\| ▓▓  /  \\/      \\|      \\    \\ /      \\ /      \\ \n" +
-                        " __   | ▓▓  ▓▓▓▓▓▓\\ ▓▓_/  ▓▓  ▓▓▓▓▓▓\\ ▓▓▓▓▓▓\\▓▓▓▓\\  ▓▓▓▓▓▓\\  ▓▓▓▓▓▓\\\n" +
-                        "|  \\  | ▓▓ ▓▓  | ▓▓ ▓▓   ▓▓| ▓▓    ▓▓ ▓▓ | ▓▓ | ▓▓ ▓▓  | ▓▓ ▓▓  | ▓▓\n" +
-                        "| ▓▓__| ▓▓ ▓▓__/ ▓▓ ▓▓▓▓▓▓\\| ▓▓▓▓▓▓▓▓ ▓▓ | ▓▓ | ▓▓ ▓▓__/ ▓▓ ▓▓__/ ▓▓\n" +
-                        " \\▓▓    ▓▓\\▓▓    ▓▓ ▓▓  \\▓▓\\\\▓▓     \\ ▓▓ | ▓▓ | ▓▓ ▓▓    ▓▓\\▓▓    ▓▓\n" +
-                        "  \\▓▓▓▓▓▓  \\▓▓▓▓▓▓ \\▓▓   \\▓▓ \\▓▓▓▓▓▓▓\\▓▓  \\▓▓  \\▓▓ ▓▓▓▓▓▓▓  \\▓▓▓▓▓▓ \n" +
-                        "                                                 | ▓▓               \n" +
-                        "                                                 | ▓▓               \n" +
-                        "                                                  \\▓▓               \n");
-
-                System.out.println("No Jokempô, cada jogador escolhe entre Pedra (0), Papel (1) ou Tesoura (2). " +
-                        "Pedra vence Tesoura, Tesoura vence Papel e Papel vence Pedra. " +
-                        "\nOs jogadores digitam o número correspondente à sua escolha e o vencedor é determinado " +
-                        "com base nessas regras");
-
                 System.out.println("\nEscolha: 0 - Pedra, 1 - Papel, 2 - Tesoura");
                 int escolha = entradaUsuario.nextInt();
 
@@ -45,11 +45,11 @@ public class ClienteUm {
                 int resultado = Integer.parseInt(entrada.readLine());
 
                 if (resultado == 0) {
-                    System.out.println("Empate!");
+                    System.out.println("\nEMPATE!");
                 } else if (resultado == 1) {
-                    System.out.println("Você venceu!");
+                    System.out.println("\nVOCÊ VENCEU!");
                 } else {
-                    System.out.println("Você perdeu!");
+                    System.out.println("\nVOCÊ PERDEU!");
                 }
             }
         } catch (IOException e)
