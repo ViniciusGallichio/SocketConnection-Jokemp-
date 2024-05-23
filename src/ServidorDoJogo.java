@@ -7,65 +7,77 @@ public class ServidorDoJogo {
 
         System.out.println("Digite a porta do servidor:");
         Scanner scanner = new Scanner(System.in);
-        int PORT = scanner.nextInt();
+        int porta = scanner.nextInt();
 
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            System.out.println("Servidor iniciado. Conectado na porta " + PORT);
+        try (ServerSocket servidorSocket = new ServerSocket(porta)) {
+            System.out.println("Servidor iniciado. Conectado na porta " + porta);
 
-            // Espera dois jogadores se conectarem
-            Socket player1Socket = serverSocket.accept();
-            System.out.println("Jogador 1 conectado: " + player1Socket.getInetAddress());
-            Socket player2Socket = serverSocket.accept();
-            System.out.println("Jogador 2 conectado: " + player2Socket.getInetAddress());
+            //Esperar dois jogadores se conectarem
+            Socket jogador1Socket = servidorSocket.accept();
+            System.out.println("Jogador 1 conectado: " + jogador1Socket.getInetAddress());
 
-            // Inicia um jogo entre os dois jogadores
-            startGame(player1Socket, player2Socket);
+            Socket jogador2Socket = servidorSocket.accept();
+            System.out.println("Jogador 2 conectado: " + jogador2Socket.getInetAddress());
+
+            //Inicia um jogo entre os dois jogadores
+            iniciarJogo(jogador1Socket, jogador2Socket);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void startGame(Socket player1Socket, Socket player2Socket) {
+    private static void iniciarJogo(Socket jogador1Socket, Socket jogador2Socket)
+    {
         try (
-                BufferedReader player1In = new BufferedReader(new InputStreamReader(player1Socket.getInputStream()));
-                PrintWriter player1Out = new PrintWriter(player1Socket.getOutputStream(), true);
-                BufferedReader player2In = new BufferedReader(new InputStreamReader(player2Socket.getInputStream()));
-                PrintWriter player2Out = new PrintWriter(player2Socket.getOutputStream(), true);
-        ) {
-            while (true) {
-                // Recebe escolhas dos jogadores
-                int player1Choice = Integer.parseInt(player1In.readLine());
-                int player2Choice = Integer.parseInt(player2In.readLine());
+                BufferedReader jogador1Entrada = new BufferedReader(new InputStreamReader(jogador1Socket.getInputStream()));
+                PrintWriter jogador1Saida = new PrintWriter(jogador1Socket.getOutputStream(), true);
+                BufferedReader jogador2Entrada = new BufferedReader(new InputStreamReader(jogador2Socket.getInputStream()));
+                PrintWriter jogador2Saida = new PrintWriter(jogador2Socket.getOutputStream(), true);
+        )
+        {
+            while (true)
+            {
+                //Recebe escolhas dos jogadores
+                int escolhaJogador1 = Integer.parseInt(jogador1Entrada.readLine());
+                int escolhaJogador2 = Integer.parseInt(jogador2Entrada.readLine());
 
-                // Determina o resultado do jogo
-                int result = getResult(player1Choice, player2Choice);
+                //Determina o resultado do jogo
+                int resultado = obterResultado(escolhaJogador1, escolhaJogador2);
 
-                // Envia o resultado para os jogadores
-                player1Out.println(result);
-                player2Out.println(result);
+                //Envia o resultado para os jogadores
+                jogador1Saida.println(resultado);
+                jogador2Saida.println(resultado);
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
-        } finally {
-            try {
-                player1Socket.close();
-                player2Socket.close();
-            } catch (IOException e) {
+        }
+        finally
+        {
+            try
+            {
+                jogador1Socket.close();
+                jogador2Socket.close();
+            } catch (IOException e)
+            {
                 e.printStackTrace();
             }
         }
     }
 
-    private static int getResult(int choice1, int choice2) {
-        // Lógica para determinar o resultado do jogo
-        // 0 - Empate, 1 - Jogador 1 vence, 2 - Jogador 2 vence
-        if (choice1 == choice2) {
+    // determinar o resultado do jogo
+    private static int obterResultado(int escolha1, int escolha2)
+    {
+
+        if (escolha1 == escolha2)
+        {
             return 0; // Empate
-        } else if ((choice1 == 0 && choice2 == 2) || (choice1 == 1 && choice2 == 0) || (choice1 == 2 && choice2 == 1)) {
-            return 1; // Jogador 1 vence
+        } else if ((escolha1 == 0 && escolha2 == 2) || (escolha1 == 1 && escolha2 == 0) || (escolha1 == 2 && escolha2 == 1)) {
+            return 1; // jogador 1 vence
         } else {
-            return 2; // Jogador 2 vence
+            return 2; // jogador 2 vence
         }
     }
 }
