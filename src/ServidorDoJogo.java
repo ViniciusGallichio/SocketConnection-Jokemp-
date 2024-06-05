@@ -12,14 +12,14 @@ public class ServidorDoJogo {
         try (ServerSocket servidorSocket = new ServerSocket(porta)) {
             System.out.println("Servidor iniciado. Conectado na porta " + porta);
 
-            //Esperar dois jogadores se conectarem
+            // Esperar dois jogadores se conectarem
             Socket jogador1Socket = servidorSocket.accept();
             System.out.println("Jogador 1 conectado: " + jogador1Socket.getInetAddress());
 
             Socket jogador2Socket = servidorSocket.accept();
             System.out.println("Jogador 2 conectado: " + jogador2Socket.getInetAddress());
 
-            //Inicia um jogo entre os dois jogadores
+
             iniciarJogo(jogador1Socket, jogador2Socket);
 
         } catch (IOException e) {
@@ -38,14 +38,14 @@ public class ServidorDoJogo {
         {
             while (true)
             {
-                //Recebe escolhas dos jogadores
+                // Recebe escolhas dos jogadores
                 int escolhaJogador1 = Integer.parseInt(jogador1Entrada.readLine());
                 int escolhaJogador2 = Integer.parseInt(jogador2Entrada.readLine());
 
-                //Determina o resultado do jogo
+                // Determina o resultado do jogo
                 int resultado = obterResultado(escolhaJogador1, escolhaJogador2);
 
-                //Envia o resultado para os jogadores
+                // Envia o resultado para os jogadores
                 jogador1Saida.println(resultado);
                 jogador2Saida.println(resultado);
             }
@@ -67,17 +67,23 @@ public class ServidorDoJogo {
         }
     }
 
-    // determinar o resultado do jogo
     private static int obterResultado(int escolha1, int escolha2)
     {
-
-        if (escolha1 == escolha2)
+        if ((escolha1 <= 2 && escolha2 <= 2) && (escolha1 == escolha2))
         {
             return 0; // Empate
-        } else if ((escolha1 == 0 && escolha2 == 2) || (escolha1 == 1 && escolha2 == 0) || (escolha1 == 2 && escolha2 == 1)) {
+        }
+        else if ((escolha1 == 0 && escolha2 == 2) || (escolha1 == 1 && escolha2 == 0) || (escolha1 == 2 && escolha2 == 1)) {
             return 1; // jogador 1 vence
-        } else {
+        }
+        else if((escolha2 == 0 && escolha1 == 2) || (escolha2 == 1 && escolha1 == 0) || (escolha2 == 2 && escolha1 == 1)){
             return 2; // jogador 2 vence
+        }
+        else if(escolha1 == 3 || escolha2 == 4){
+            return 3; // Fechar jogo
+        }
+        else {
+            return 4; // Jogada fora do padrão
         }
     }
 }
