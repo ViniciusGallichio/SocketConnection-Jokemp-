@@ -7,11 +7,10 @@ public class ClienteUm {
     public static void main(String[] args) {
         System.out.println("*!BEM VINDO AO JOGO!*");
 
-        System.out.println("No Jokempô, cada jogador escolhe entre Pedra (0), Papel (1) ou Tesoura (2). " +
-                "Pedra vence Tesoura, Tesoura vence Papel e Papel vence Pedra. " +
-                "\nOs jogadores digitam o número correspondente à sua escolha e o vencedor é determinado " +
-                "com base nessas regras");
-
+        System.out.println("No Jokempo, cada jogador escolhe entre Pedra (0), Papel (1) ou Tesoura (2). " +
+                "\nPedra vence Tesoura, Tesoura vence Papel e Papel vence Pedra." +
+                "\nOs jogadores digitam o número à sua escolha e o vencedor é determinado " +
+                "com base nessas regras.");
 
         System.out.println("\nDigite (1) para JOGADOR VS CPU | (2) para JOGADOR VS JOGADOR | (3) para FECHAR O JOGO:");
         Scanner scanner = new Scanner(System.in);
@@ -21,57 +20,71 @@ public class ClienteUm {
             iniciarJogoVsCPU();
         }
         else if(modoJogo == 2){
-            System.out.println("Digite o endereço IP do servidor: ");
-            Scanner scanner1 = new Scanner(System.in);
-            String enderecoServidor = scanner1.nextLine();
+            JogadorVsJogador();
+        }
+        else if(modoJogo == 3){
+            System.exit(0);
+        }
+    }
 
-            System.out.println("Digite a porta do servidor: ");
-            Scanner scanner2 = new Scanner(System.in);
-            int portaServidor = scanner2.nextInt();
+    public static void JogadorVsJogador() {
+        System.out.println("\nDigite o endereco IP do servidor: ");
+        Scanner scanner1 = new Scanner(System.in);
+        String enderecoServidor = scanner1.nextLine();
 
+        System.out.println("Digite a porta do servidor: ");
+        int portaServidor = scanner1.nextInt();
+
+        scanner1.nextLine(); // Consumir a nova linha
+
+        System.out.println("Digite o nome do Jogador: ");
+        String nomeJogador = scanner1.nextLine();
+
+        try {
+            Socket jogadorSocket = new Socket(enderecoServidor, portaServidor);
+            Thread jogadorThread = new Thread(new Jogador(jogadorSocket, nomeJogador));
+            jogadorThread.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static class Jogador implements Runnable {
+        private Socket socket;
+        private String jogadorNome;
+
+        Jogador(Socket socket, String jogadorNome) {
+            this.socket = socket;
+            this.jogadorNome = jogadorNome;
+        }
+
+        @Override
+        public void run() {
             try (
-                    Socket soquete = new Socket(enderecoServidor, portaServidor);
-                    BufferedReader entrada = new BufferedReader(new InputStreamReader(soquete.getInputStream()));
-                    PrintWriter saida = new PrintWriter(soquete.getOutputStream(), true);
+                    BufferedReader entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    PrintWriter saida = new PrintWriter(socket.getOutputStream(), true);
                     Scanner entradaUsuario = new Scanner(System.in);
             ) {
                 while (true) {
-                    System.out.println("\nDIGITE: (0) - Pedra | (1) - Papel | (2) - Tesoura | (Para sair do jogo digite - (3))");
+                    System.out.println("\n" + jogadorNome + ", digite: (0) - Pedra | (1) - Papel | (2) - Tesoura | (Para sair do jogo digite - (3))");
                     int escolha = entradaUsuario.nextInt();
 
-                    saida.println(escolha);
+                    saida.println(jogadorNome + ":" + escolha);
 
-                    int resultado = Integer.parseInt(entrada.readLine());
+                    String resultado = entrada.readLine();
+                    System.out.println(resultado);
 
-                    if (resultado == 0) {
-                        System.out.println("\nEMPATE!");
-                    } else if (resultado == 1) {
-                        System.out.println("\nVOCÊ VENCEU!");
-                    }
-                    else if (resultado == 2) {
-                        System.out.println("\nVOCÊ PERDEU!");
-                    }
-                    else if (resultado == 3) {
-                        main(new String[]{});
-                        System.out.println("Conexão fechada");
-                    }
-                    else {
-                        System.out.println("\nFAÇA UMA JOGADA VALIDA!");
-                    }
                 }
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        else if (modoJogo == 3){
-            System.exit(0);
         }
     }
 
     private static void iniciarJogoVsCPU() {
 
-        System.out.println("\nEscolha: 0 - Pedra | 1 - Papel | 2 - Tesoura | (Para sair do jogo digite - 3)");
+        System.out.println("\nEscolha: (0) - Pedra | (1) - Papel | (2) - Tesoura | (Para sair do jogo digite - (3))");
         Scanner scanner = new Scanner(System.in);
         int escolha = scanner.nextInt();
 
@@ -115,7 +128,7 @@ public class ClienteUm {
             return 3; // Reinicia o jogo
         }
         else {
-            System.out.println("\nFAÇA UMA JOGADA VALIDA!");
+            System.out.println("\nFACA UMA JOGADA VALIDA!");
             return 4;
         }
     }
