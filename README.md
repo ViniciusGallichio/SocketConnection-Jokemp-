@@ -1,7 +1,6 @@
 # GAME JOKEMPÔ :joystick:
 
- Desenvolvido por: Vinicius Marques Gallichio RA: 125111376163
- , Henry Yujra Espejo RA: 125111372278 e Caio Isidoro Albuquerque Vitor RA: 12523157915
+ Desenvolvido por: Vinicius Marques Gallichio
 
 
 ## COMO FUNCIONA:
